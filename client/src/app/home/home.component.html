@@ -1,18 +1,24 @@
 <div class="container mt-5">
   <div *ngIf="!registerMode" style='text-align: center;'>
-      <h1>Find your match</h1>
-      <p class="lead">Come on in to view your matches... all you need to do is sign up!</p>
+    <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0"
+      (ngSubmit)="login()" autocomplete="off">
+      <input name="username" [(ngModel)]="model.username" class="form-control mr-sm-2" type="text"
+        placeholder="Username">
+      <input name="password" [(ngModel)]="model.password" class="form-control mr-sm-2" type="password"
+        placeholder="Password">
+      <!-- <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button> -->
       <div class="text-center">
-          <button (click)="registerToggle()" class="btn btn-primary btn-lg mr-2">Register</button>
-          <button class="btn btn-info btn-lg">Learn more</button>
+        <button class="btn btn-success btn-lg" type="submit">Login</button>
+        <button (click)="registerToggle()" class="btn btn-info btn-lg mr-2">Register</button>
       </div>
+    </form>
   </div>
 
   <div *ngIf="registerMode" class="container">
-      <div class="row justify-content-center">
-          <div class="col-4">
-              <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
-          </div>
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
       </div>
+    </div>
   </div>
 </div>
