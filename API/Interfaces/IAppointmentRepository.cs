@@ -11,5 +11,9 @@ namespace API.Interfaces
         Appointment CreateAppointment(string username, string name, DateTime appointmentTime);
 
         Appointment GetAppointment(string username);
+
+        bool DeleteAppointment(string username);
+
+        bool UpdateAppointment(string username, DateTime appointmentTime);
     }
 }

@@ -18,8 +18,8 @@ namespace API.Controllers
             _appointmentRepository = appointmentRepository;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Appointment>> GetAllAppointments([FromQuery] string orderBy)
+        [HttpGet("{orderBy?}")]
+        public ActionResult<IEnumerable<Appointment>> GetAllAppointments(string orderBy)
         {
             return _appointmentRepository.GetAllAppointments(orderBy);
         }
@@ -31,12 +31,25 @@ namespace API.Controllers
             if (user == null) return BadRequest("User does not exist");
 
             var appointment = _appointmentRepository.CreateAppointment(user.Username, user.FirstName, createAppointmentParams.AppointmentTime);
-            if (appointment == null) return BadRequest("Something went wrong");
+            if (appointment == null) return BadRequest("Request Failed");
 
             return Ok(appointment);
         }
 
-        // [HttpPut]
-        // public ActionResult<Appointment> UpdateAppointment()
+        [HttpDelete("{username}")]
+        public ActionResult DeleteAppointment(string username)
+        {
+            if (_appointmentRepository.DeleteAppointment(username))
+                return Ok();
+            return BadRequest("Request Failed");
+        }
+
+        [HttpPut]
+        public ActionResult<Appointment> EditAppointment(EditAppointmentParams editAppointmentParams)
+        {
+            _appointmentRepository.UpdateAppointment(editAppointmentParams.Username, editAppointmentParams.AppointmentTime);
+
+            return Ok(_appointmentRepository.GetAppointment(editAppointmentParams.Username));
+        }
     }
 }

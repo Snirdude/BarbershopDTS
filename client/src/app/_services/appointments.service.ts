@@ -78,4 +78,16 @@ export class AppointmentsService {
   getAllAppointments(orderBy: string) {
     return this.http.get<Appointment[]>(this.baseUrl + 'appointments/' + orderBy);
   }
+
+  createAppointment(username: string, appointmentTime: Date) {
+    return this.http.post<Appointment>(this.baseUrl + 'appointments/', {username: username, appointmentTime: appointmentTime});
+  }
+
+  deleteAppointment(username:string) {
+    return this.http.delete(this.baseUrl + 'appointments/' + username);
+  }
+
+  editAppointment(username: string, date: Date) {
+    return this.http.put<Appointment>(this.baseUrl + 'appointments/', {username: username, appointmentTime: date});
+  }
 }

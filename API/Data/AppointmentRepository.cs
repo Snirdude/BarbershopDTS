@@ -20,13 +20,21 @@ namespace API.Data
             {
                 Username = username.ToLower(),
                 Name = name,
-                CreatedDate = DateTime.Now,
-                AppointmentTime = appointmentTime
+                CreatedTime = DateTime.Now,
+                AppointmentTime = appointmentTime.ToLocalTime()
             });
 
             _context.SaveChanges();
 
             return GetAppointment(username);
+        }
+
+        public bool DeleteAppointment(string username)
+        {
+            var appointment = GetAppointment(username);
+            _context.Remove(appointment);
+
+            return _context.SaveChanges() > 0;
         }
 
         public List<Appointment> GetAllAppointments(string orderBy)
@@ -35,16 +43,16 @@ namespace API.Data
             switch (orderBy)
             {
                 case "nameDesc":
-                    query.OrderByDescending(x => x.Name);
+                    query = query.OrderByDescending(x => x.Name);
                     break;
                 case "name":
-                    query.OrderBy(x => x.Name);
+                    query = query.OrderBy(x => x.Name);
                     break;
                 case "dateDesc":
-                    query.OrderByDescending(x => x.AppointmentTime);
+                    query = query.OrderByDescending(x => x.AppointmentTime);
                     break;
                 case "date":
-                    query.OrderBy(x => x.AppointmentTime);
+                    query = query.OrderBy(x => x.AppointmentTime);
                     break;
                 default:
                     break;
@@ -56,6 +64,13 @@ namespace API.Data
         public Appointment GetAppointment(string username)
         {
             return _context.Appointments.SingleOrDefault(x => x.Username.Equals(username.ToLower()));
+        }
+
+        public bool UpdateAppointment(string username, DateTime appointmentTime)
+        {
+            _context.Appointments.Single(x => x.Username.ToLower().Equals(username.ToLower())).AppointmentTime = appointmentTime.ToLocalTime();
+
+            return _context.SaveChanges() > 0;
         }
     }
 }
