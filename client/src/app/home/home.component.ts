@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountService } from '../_services/account.service';
 
@@ -9,18 +10,36 @@ import { AccountService } from '../_services/account.service';
 })
 export class HomeComponent implements OnInit {
   registerMode = false;
+  loginForm: FormGroup;
   model: any = {}
 
-  constructor(public accountService: AccountService, private router: Router) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { }
 
   ngOnInit(): void {
+    this.accountService.currentUser$.subscribe(user => {
+      if (user !== null) {
+        this.router.navigateByUrl('/appointments');
+      }
+    });
+    this.initializeForm();
   }
 
   login() {
-    // this.accountService.login(this.model).subscribe(response => {
-    //   // this.memberService.resetUserParams();
-    //   this.router.navigateByUrl('/members');
-    // })
+    this.model = {
+      username: this.loginForm.controls['username'].value,
+      password: this.loginForm.controls['password'].value,
+    };
+
+    this.accountService.login(this.model).subscribe(response => {
+      this.router.navigateByUrl('/appointments');
+    })
+  }
+
+  initializeForm() {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+    });
   }
 
   registerToggle() {

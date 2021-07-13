@@ -1,17 +1,24 @@
 <div class="container mt-5">
-  <div *ngIf="!registerMode" style='text-align: center;'>
-    <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0"
-      (ngSubmit)="login()" autocomplete="off">
-      <input name="username" [(ngModel)]="model.username" class="form-control mr-sm-2" type="text"
-        placeholder="Username">
+  <div *ngIf="!registerMode" style='text-align: center;' class="row justify-content-center">
+    <div class="col-4">
+      <h2 class="text-center text-primary">Sign In</h2>
+      <hr>
+      <form [formGroup]="loginForm" class="mt-2 mt-md-0"
+        (ngSubmit)="login()" autocomplete="off">
+        <app-text-input [formControl]="loginForm.controls['username']" [label]="'Username'"></app-text-input>
+        <app-text-input [formControl]="loginForm.controls['password']" [label]="'Password'" [type]="'password'">
+        </app-text-input>
+        <!-- <input name="username" [(ngModel)]="model.username" class="form-control mr-sm-2" type="text"
+      placeholder="Username">
       <input name="password" [(ngModel)]="model.password" class="form-control mr-sm-2" type="password"
-        placeholder="Password">
-      <!-- <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button> -->
-      <div class="text-center">
-        <button class="btn btn-success btn-lg" type="submit">Login</button>
-        <button (click)="registerToggle()" class="btn btn-info btn-lg mr-2">Register</button>
-      </div>
-    </form>
+      placeholder="Password"> -->
+        <!-- <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button> -->
+        <div class="form-group text-center">
+          <button class="btn btn-success mr-2" type="submit">Login</button>
+          <button (click)="registerToggle()" class="btn btn-info mr-2">Sign Up</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <div *ngIf="registerMode" class="container">
